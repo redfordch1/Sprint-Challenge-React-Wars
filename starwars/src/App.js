@@ -1,17 +1,30 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from "axios";
 import './App.css';
+import People from "./components/People.js";
+import styled from "styled-components";
 
 const App = () => {
-  // Try to think through what state you'll need for this app before starting. Then build out
-  // the state properties here.
 
-  // Fetch characters from the star wars api in an effect hook. Remember, anytime you have a 
-  // side effect in a component, you want to think about which state and/or props it should
-  // sync up with, if any.
+  const Title = styled.h1`
+    font-size: 4.0rem;
+  `;
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.get("https://lambda-swapi.herokuapp.com/api/people/").then(response => {
+    setData(response.data.results);
+    console.log(response.data.results);
+    })
+  },[]);
 
   return (
     <div className="App">
-      <h1 className="Header">React Wars</h1>
+      <Title className="Header">React Wars</Title>
+      {data.map(person => {
+         return <People name = {person.name} gender = {person.gender} hairColor = {person.hair_color} mass = {person.mass} skinColor = {person.skin_color}/>
+       })}
     </div>
   );
 }
